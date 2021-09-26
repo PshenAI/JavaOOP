@@ -50,7 +50,7 @@ public class Phone {
 			System.out.println("Your number is not registered in our network!");
 		}
 		if (a.registration == false) {
-			System.out.println("The numbew you're trying to call is not registered in out network!");
+			System.out.println("The number you're trying to call is not registered in our network!");
 		}
 		if (a.registration == true && this.registration == true) {
 			this.inCall(this);
