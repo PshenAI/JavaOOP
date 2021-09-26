@@ -1,4 +1,4 @@
-package triangle;
+package triangleClass;
 
 import java.util.Scanner;
 

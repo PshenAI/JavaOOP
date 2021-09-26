@@ -1,4 +1,4 @@
-package triangle;
+package triangleClass;
 
 public class Triangle {
 	private double sideA;
