@@ -53,12 +53,12 @@ public class Phone {
 			System.out.println("The number you're trying to call is not registered in our network!");
 		}
 		if (a.registration == true && this.registration == true) {
-			this.inCall(this);
+			a.inCall(this);
 		}
 	}
 
 	public void inCall(Phone a) {
-		System.out.println("You've got incoming call from: " + a.number + "!");
+		System.out.println(this.number + ", you've got incoming call from: " + a.number + "!");
 	}
 
 	public String toString() {
