@@ -3,7 +3,6 @@ package javaphone;
 public class Phone {
 	private String model;
 	private String number;
-	private boolean registration = false;
 	private Network net;
 
 	public Phone(String model, String number) {
@@ -32,14 +31,6 @@ public class Phone {
 		this.number = number;
 	}
 
-	public boolean isRegistration() {
-		return registration;
-	}
-
-	public void setRegistration(boolean registration) {
-		this.registration = registration;
-	}
-
 	public Network getNet() {
 		return net;
 	}
@@ -51,7 +42,6 @@ public class Phone {
 	public void registration(Network b) {
 		net = b;
 		b.registrate(this.number, this);
-		this.registration = true;
 		System.out.println("Registration succesful!");
 	}
 
@@ -63,12 +53,8 @@ public class Phone {
 			for (int i = 0; i < net.numbers.length; i++) {
 				if (a == net.numbers[i]) {
 					Phone temp = net.phones[i];
-					if (this.registration == false) {
-
-					} else {
-						temp.inCall(this.number);
-						break;
-					}
+					temp.inCall(this.number);
+					break;
 				}
 				if (i == net.numbers.length - 1) {
 					System.out.println("The number you're trying to call is not registered in our network!");
