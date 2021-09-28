@@ -4,6 +4,7 @@ public class Phone {
 	private String model;
 	private String number;
 	private boolean registration = false;
+	private Network net;
 
 	public Phone(String model, String number) {
 		super();
@@ -39,26 +40,46 @@ public class Phone {
 		this.registration = registration;
 	}
 
+	public Network getNet() {
+		return net;
+	}
+
+	public void setNet(Network net) {
+		this.net = net;
+	}
+
 	public void registration(Network b) {
-		b.registrate(this.number);
+		net = b;
+		b.registrate(this.number, this);
 		this.registration = true;
 		System.out.println("Registration succesful!");
 	}
 
-	public void outCall(Phone a) {
-		if (this.registration == false) {
+	public void outCall(String a) {
+		if (this.net == null) {
 			System.out.println("Your number is not registered in our network!");
+
+		} else {
+			for (int i = 0; i < net.numbers.length; i++) {
+				if (a == net.numbers[i]) {
+					Phone temp = net.phones[i];
+					if (this.registration == false) {
+
+					} else {
+						temp.inCall(this.number);
+						break;
+					}
+				}
+				if (i == net.numbers.length - 1) {
+					System.out.println("The number you're trying to call is not registered in our network!");
+				}
+			}
 		}
-		if (a.registration == false) {
-			System.out.println("The numbew you're trying to call is not registered in out network!");
-		}
-		if (a.registration == true && this.registration == true) {
-			this.inCall(this);
-		}
+
 	}
 
-	public void inCall(Phone a) {
-		System.out.println("You've got incoming call from: " + a.number + "!");
+	public void inCall(String a) {
+		System.out.println(this.model + ", you've got incoming call from: " + a + "!");
 	}
 
 	public String toString() {
