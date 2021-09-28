@@ -63,12 +63,8 @@ public class Phone {
 			for (int i = 0; i < net.numbers.length; i++) {
 				if (a == net.numbers[i]) {
 					Phone temp = net.phones[i];
-					if (this.registration == false) {
-
-					} else {
-						temp.inCall(this.number);
-						break;
-					}
+					temp.inCall(this.number);
+					break;
 				}
 				if (i == net.numbers.length - 1) {
 					System.out.println("The number you're trying to call is not registered in our network!");
