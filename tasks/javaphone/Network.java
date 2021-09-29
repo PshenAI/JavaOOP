@@ -41,14 +41,6 @@ public class Network {
 	public void setNumbers(String[] numbers) {
 		this.numbers = numbers;
 	}
-	
-	public String[] getPhones() {
-		return phones;
-	}
-
-	public void setPhones(String[] phones) {
-		this.phones = phones;
-	}
 
 	public void registrate(String a, Phone b) {
 		numbers = Arrays.copyOf(numbers, numbers.length + 1);
