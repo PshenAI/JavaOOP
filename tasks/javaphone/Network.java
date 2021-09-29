@@ -4,17 +4,26 @@ import java.util.Arrays;
 
 public class Network {
 	private String name = "Javafone";
-	protected String[] numbers = new String[0];
-	protected Phone[] phones = new Phone[0];
+	private String[] numbers = new String[0];
+	private Phone[] phones = new Phone[0];
 
-	public Network(String name, String[] numbers) {
+	public Network(String name, String[] numbers, Phone[] phones) {
 		super();
 		this.name = name;
 		this.numbers = numbers;
+		this.phones = phones;
 	}
 
 	public Network() {
 		super();
+	}
+
+	public Phone[] getPhones() {
+		return phones;
+	}
+
+	public void setPhones(Phone[] phones) {
+		this.phones = phones;
 	}
 
 	public String getName() {

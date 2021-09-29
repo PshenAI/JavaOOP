@@ -50,13 +50,13 @@ public class Phone {
 			System.out.println("Your number is not registered in our network!");
 
 		} else {
-			for (int i = 0; i < net.numbers.length; i++) {
-				if (a == net.numbers[i]) {
-					Phone temp = net.phones[i];
+			for (int i = 0; i < net.getNumbers().length; i++) {
+				if (a == net.getNumbers()[i]) {
+					Phone temp = net.getPhones()[i];
 					temp.inCall(this.number);
 					break;
 				}
-				if (i == net.numbers.length - 1) {
+				if (i == net.getNumbers().length - 1) {
 					System.out.println("The number you're trying to call is not registered in our network!");
 				}
 			}
