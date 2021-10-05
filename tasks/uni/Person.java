@@ -4,13 +4,13 @@ public abstract class Person {
 	private String name;
 	private String surname;
 	private int age;
-	private gender gender;
+	private Gender gender;
 
 	public Person() {
 		super();
 	}
 
-	public Person(String name, String surname, int age, uni.Person.gender gender) {
+	public Person(String name, String surname, int age, uni.Person.Gender gender) {
 		super();
 		this.name = name;
 		this.surname = surname;
@@ -42,15 +42,15 @@ public abstract class Person {
 		this.age = age;
 	}
 
-	public gender getGender() {
+	public Gender getGender() {
 		return gender;
 	}
 
-	public void setGender(gender gender) {
+	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
 
-	public enum gender {
+	public enum Gender {
 		Male, Female
 	}
 

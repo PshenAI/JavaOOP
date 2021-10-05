@@ -36,26 +36,33 @@ public class Group {
 	}
 
 	public void addStudent(Student student) throws GroupOverflowException {
-		if (students[9] != null) {
-			throw new GroupOverflowException();
-		}
+		int count = 0;
 		for (int i = 0; i < students.length; i++) {
 			if (students[i] == null) {
 				students[i] = student;
+				count += 1;
 				break;
 			}
+		}
+		if (count == 0) {
+			throw new GroupOverflowException();
 		}
 	}
 
 	public void fireStudent(int id) throws NoSuchStudentException {
+		int count = 0;
 		for (int i = 0; i < students.length; i++) {
 			if (students[i] == null) {
-				throw new NoSuchStudentException();
+				continue;
 			}
 			if (students[i].getId() == id) {
 				students[i] = null;
+				count += 1;
 				break;
 			}
+		}
+		if (count == 0) {
+			throw new NoSuchStudentException();
 		}
 	}
 
@@ -63,12 +70,15 @@ public class Group {
 		Student sought = null;
 		for (int i = 0; i < students.length; i++) {
 			if (students[i] == null) {
-				throw new NoSuchStudentException();
+				continue;
 			}
 			if (students[i].getSurname().equals(surname)) {
 				sought = students[i];
 				break;
 			}
+		}
+		if (sought == null) {
+			throw new NoSuchStudentException();
 		}
 		return sought;
 	}
@@ -76,8 +86,14 @@ public class Group {
 	public Student[] sortStudents() {
 		Student[] sortStud = Arrays.copyOf(students, students.length);
 
-		for (int i = 0; i < sortStud.length && sortStud[i] != null; i++) {
-			for (int j = 0; j < students.length && sortStud[j] != null; j++) {
+		for (int i = 0; i < sortStud.length; i++) {
+			if (sortStud[i] == null) {
+				continue;
+			}
+			for (int j = 0; j < students.length; j++) {
+				if (sortStud[j] == null) {
+					continue;
+				}
 				sortStud = sorterName(sortStud, sortStud[j], j);
 			}
 		}
@@ -88,7 +104,10 @@ public class Group {
 
 	public Student[] sorterName(Student[] a, Student b, int c) {
 		char[] stand = b.getName().toLowerCase().toCharArray();
-		for (int i = 0; i < a.length && a[i] != null; i++) {
+		for (int i = 0; i < a.length; i++) {
+			if (a[i] == null) {
+				continue;
+			}
 			int count = 0;
 			char[] standArr = a[i].getName().toLowerCase().toCharArray();
 			int[] indStand = new int[stand.length];
@@ -165,15 +184,13 @@ public class Group {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("The group is empty!");
-		if (students[0] != null) {
-			Student[] arr = sortStudents();
-			sb.setLength(0);
-			for (int i = 0; i < arr.length; i++) {
-				if (arr[i] != null) {
-					sb.append(arr[i].getInfo() + "\n");
-				} else {
-					break;
-				}
+		Student[] arr = sortStudents();
+		sb.setLength(0);
+		for (int i = 0; i < arr.length; i++) {
+			if (arr[i] != null) {
+				sb.append(arr[i].getInfo() + "\n");
+			} else {
+				continue;
 			}
 		}
 		return sb.toString();

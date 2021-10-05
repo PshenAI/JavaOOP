@@ -4,11 +4,11 @@ public class Student extends Person {
 	private int id;
 	private String group;
 
-	public Student(String name, String surname, int age, uni.Person.gender gender) {
+	public Student(String name, String surname, int age, uni.Person.Gender gender) {
 		super(name, surname, age, gender);
 	}
 
-	public Student(int id, String group, String name, String surname, int age, uni.Person.gender gender) {
+	public Student(int id, String group, String name, String surname, int age, uni.Person.Gender gender) {
 		super(name, surname, age, gender);
 		this.id = id;
 		this.group = group;
