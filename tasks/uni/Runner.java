@@ -3,6 +3,7 @@ package uni;
 import uni.Person.Gender;
 import uni.exceptions.GroupOverflowException;
 import uni.exceptions.NoSuchStudentException;
+import uni.exceptions.WrongCSVFormatException;
 
 public class Runner {
 
@@ -16,12 +17,14 @@ public class Runner {
 		Student gst = new Student(77777, null, "Elly", "Bjorn", 18, Gender.Female);
 		Student hst = new Student(88888, null, "Marlin", "Al", 25, Gender.Female);
 		Student ist = new Student(99999, null, "Johnathan", "Safaro", 19, Gender.Male);
-		Student jst = new Student(10101, null, "Molly", "Bar", 24, Gender.Female);
 
-		Student[] tempArr = { ast, cst, dst, bst, est, fst, gst, hst, ist, jst };
+		Student[] tempArr = { ast, cst, dst, bst, null, est, fst, gst, hst, ist };
 
 		Group first = new Group("8806");
 		for (int i = 0; i < tempArr.length; i++) {
+			if (tempArr[i] == null) {
+				continue;
+			}
 			Student temp = tempArr[i];
 			temp.setGroup(first.getName());
 			try {
@@ -49,10 +52,28 @@ public class Runner {
 
 		System.out.println();
 
+//		try {
+//			first.addStudent(ast);
+//			first.addStudent(cst);
+//		} catch (GroupOverflowException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+
+		StudentScanner ss = new StudentScanner(first);
+		ss.studentAssembler();
+
+		String csv = "13311;8806;Chris;Vachowski;33;Male";
+		Student jst = new Student(0, null, null, null, 0, null);
 		try {
-			first.addStudent(ast);
-			first.addStudent(cst);
-		} catch (GroupOverflowException e) {
+			jst = jst.fromCSVString(csv);
+			try {
+				first.addStudent(jst);
+			} catch (GroupOverflowException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (WrongCSVFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
