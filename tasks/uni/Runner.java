@@ -1,9 +1,9 @@
 package uni;
 
 import uni.Person.Gender;
+import uni.exceptions.GenderChoiceException;
 import uni.exceptions.GroupOverflowException;
 import uni.exceptions.NoSuchStudentException;
-import uni.exceptions.WrongCSVFormatException;
 
 public class Runner {
 
@@ -63,7 +63,7 @@ public class Runner {
 		StudentScanner ss = new StudentScanner(first);
 		ss.studentAssembler();
 
-		String csv = "13311;8806;Chris;Vachowski;33;Male";
+		String csv = "13331;8806;Chris;Vachowski;33;Male";
 		Student jst = new Student(0, null, null, null, 0, null);
 		try {
 			jst = jst.fromCSVString(csv);
@@ -73,7 +73,7 @@ public class Runner {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} catch (WrongCSVFormatException e) {
+		} catch (GenderChoiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

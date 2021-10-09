@@ -1,10 +1,10 @@
 package uni;
 
-import uni.exceptions.WrongCSVFormatException;
+import uni.exceptions.GenderChoiceException;
 
 public interface CSVConverter {
 	public String toCSVString();
 
-	public Student fromCSVString(String str) throws WrongCSVFormatException;
+	public Student fromCSVString(String str) throws GenderChoiceException;
 
 }

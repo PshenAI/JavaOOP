@@ -1,6 +1,6 @@
 package uni;
 
-import uni.exceptions.WrongCSVFormatException;
+import uni.exceptions.GenderChoiceException;
 
 public class Student extends Person implements CSVConverter {
 	private int id;
@@ -46,7 +46,7 @@ public class Student extends Person implements CSVConverter {
 	}
 
 	@Override
-	public Student fromCSVString(String str) throws WrongCSVFormatException {
+	public Student fromCSVString(String str) throws GenderChoiceException {
 		String[] strArr = str.split(";");
 		if (strArr[strArr.length - 1].equals("Male")) {
 			Student st = new Student(Integer.parseInt(strArr[0]), strArr[1], strArr[2], strArr[3],
@@ -57,7 +57,7 @@ public class Student extends Person implements CSVConverter {
 					Integer.parseInt(strArr[4]), Gender.Female);
 			return st;
 		} else {
-			throw new WrongCSVFormatException();
+			throw new GenderChoiceException();
 		}
 
 	}
