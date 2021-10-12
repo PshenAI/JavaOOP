@@ -15,20 +15,15 @@ public class GroupFileStorage {
 	public void saveGroupToCSV(Group gr) throws IOException {
 
 		File fl = new File(gr.getName() + ".csv");
-		try {
-			fl.createNewFile();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try (OutputStream os = new FileOutputStream(fl)) {
+
+		try (var pw = new PrintWriter(fl)) {
 			Student[] students = gr.getStudents();
 			for (Student student : students) {
 				if (student == null) {
 					continue;
 				}
 				String temp = student.toCSVString() + "\n";
-				os.write(temp.getBytes());
+				pw.write(temp);
 			}
 		} catch (IOException e) {
 			throw e;
