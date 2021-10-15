@@ -54,9 +54,6 @@ public class Runner {
 		} else {
 			System.out.println("Entered file is not a directory.");
 		}
-		if (count == 0) {
-			System.out.println("No files with such extension in directory.");
-		}
 
 		System.out.println("Done!");
 
