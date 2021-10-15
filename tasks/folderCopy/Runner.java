@@ -9,12 +9,12 @@ public class Runner {
 		Thread thr = Thread.currentThread();
 		File in = new File("test0");
 		File out = new File("test1");
-		File[] fileArr = in.listFiles();
 		int cpu = Runtime.getRuntime().availableProcessors();
 		Thread[] thrArr = new Thread[cpu];
 
 		int count = 0;
 		if (in.isDirectory() == true) {
+			File[] fileArr = in.listFiles();
 			for (File file : fileArr) {
 				File fl = new File(out, file.getName());
 				FolderCopyTask fct = new FolderCopyTask(file, fl);
