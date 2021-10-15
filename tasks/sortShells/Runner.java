@@ -38,7 +38,7 @@ public class Runner {
 		}
 		int[] resultArr = mergeSequence(sortTask, testArr);
 		long endTime = System.nanoTime();
-		System.out.println("Monothread method took: " + (endTime - startTime) + " nanoseconds and the result is:\n"
+		System.out.println("Multithread method took: " + (endTime - startTime) + " nanoseconds and the result is:\n"
 				+ Arrays.toString(resultArr));
 
 	}
