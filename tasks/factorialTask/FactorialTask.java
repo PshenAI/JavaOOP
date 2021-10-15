@@ -4,7 +4,7 @@ import java.math.BigInteger;
 
 public class FactorialTask implements Runnable {
 
-	int number;
+	private int number;
 
 	public FactorialTask(int number) {
 		super();

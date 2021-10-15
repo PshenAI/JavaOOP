@@ -18,17 +18,17 @@ public class Runner {
 		int diff0 = intArr.length / cpu;
 		int diff1 = diff0;
 		var thrArr = new Thread[cpu];
-		var taskArr = new elementSumTask[cpu];
+		var taskArr = new ElementSumTask[cpu];
 
 		for (int i = 0; i < cpu; i++) {
 			if (i == 0) {
-				taskArr[i] = new elementSumTask(intArr, 0, diff0);
+				taskArr[i] = new ElementSumTask(intArr, 0, diff0);
 				thrArr[i] = new Thread(taskArr[i]);
 			} else if (i == cpu - 1) {
-				taskArr[i] = new elementSumTask(intArr, diff1, intArr.length);
+				taskArr[i] = new ElementSumTask(intArr, diff1, intArr.length);
 				thrArr[i] = new Thread(taskArr[i]);
 			} else {
-				taskArr[i] = new elementSumTask(intArr, diff1, diff1 + diff0);
+				taskArr[i] = new ElementSumTask(intArr, diff1, diff1 + diff0);
 				thrArr[i] = new Thread(taskArr[i]);
 				diff1 = diff1 + diff0;
 			}

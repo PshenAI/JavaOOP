@@ -2,14 +2,14 @@ package elementSum;
 
 import java.math.BigInteger;
 
-public class elementSumTask implements Runnable {
+public class ElementSumTask implements Runnable {
 
 	private int[] arr;
 	private int indFrom;
 	private int indTo;
 	private BigInteger sum;
 
-	public elementSumTask(int[] arr, int indFrom, int indTo) {
+	public ElementSumTask(int[] arr, int indFrom, int indTo) {
 		super();
 		this.arr = arr;
 		this.indFrom = indFrom;
