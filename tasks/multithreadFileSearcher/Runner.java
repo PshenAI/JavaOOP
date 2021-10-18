@@ -10,12 +10,6 @@ public class Runner {
 
 		MultiFileSearcher mfs = new MultiFileSearcher();
 		SearchTask st = new SearchTask(mfs, soughtDir, soughtName);
-		try {
-			st.getThr().join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 	}
 
