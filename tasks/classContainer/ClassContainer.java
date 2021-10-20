@@ -44,7 +44,11 @@ public class ClassContainer {
 
 	@Override
 	public String toString() {
-		return "ClassContainer [container=" + Arrays.toString(container) + "]";
+		String buff = "Container contains:\n";
+		for (Object object : container) {
+			buff += object + "\n";
+		}
+		return buff;
 	}
 
 }
