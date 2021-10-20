@@ -17,6 +17,7 @@ public class Runner {
 		System.out.println(cc.pop());
 
 		System.out.println(cc.peek());
+		System.out.println("--------------------------------");
 		System.out.println(Arrays.toString(cc.getContainer()));
 
 	}
