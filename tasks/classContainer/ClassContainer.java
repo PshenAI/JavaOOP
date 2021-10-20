@@ -19,7 +19,7 @@ public class ClassContainer {
 	}
 
 	public void push(Object obj) {
-		Object[] newCont = new Object[container.length + 1];
+		Object[] newCont = Arrays.copyOf(container, container.length + 1);
 		for (int i = 0; i < container.length; i++) {
 			newCont[i + 1] = container[i];
 		}
@@ -29,7 +29,7 @@ public class ClassContainer {
 
 	public Object pop() {
 		Object temp = container[0];
-		Object[] newCont = new Object[container.length - 1];
+		Object[] newCont = Arrays.copyOf(container, container.length - 1);
 		for (int i = 0; i < newCont.length; i++) {
 			newCont[i] = container[i + 1];
 		}
