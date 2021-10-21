@@ -6,7 +6,7 @@ public class Runner {
 
 	public static void main(String[] args) {
 
-		int[] test = new int[20];
+		int[] test = new int[200000];
 		for (int i = 0; i < test.length; i++) {
 			test[i] = (int) (Math.random() * 100);
 		}
