@@ -82,12 +82,6 @@ public class Group {
 
 	public List<Student> sortStudentsByLastName() {
 
-//		Student[] sortStud = new Student[students.size()];
-//		students.toArray(sortStud);
-//		Arrays.sort(sortStud,
-//				Comparator.nullsLast(new StudentSurnameComparator().thenComparing(new StudentNameComparator())));
-//		return sortStud;
-
 		List<Student> buffer = new ArrayList<>(students);
 		Collections.sort(buffer, new StudentSurnameComparator().thenComparing(new StudentNameComparator()));
 		return buffer;
