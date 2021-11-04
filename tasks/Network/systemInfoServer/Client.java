@@ -8,7 +8,13 @@ import java.net.Socket;
 
 public class Client implements Runnable {
 
-	public Client(Socket soc, String answ, SyncCounter syncount) {
+	private SyncCounter syncount;
+	private Socket soc;
+	private String answ;
+	Thread t;
+	
+	
+		public Client(Socket soc, String answ, SyncCounter syncount) {
 		super();
 		this.syncount = syncount;
 		this.soc = soc;
@@ -16,12 +22,6 @@ public class Client implements Runnable {
 		t = new Thread(this);
 		t.start();
 	}
-
-	private SyncCounter syncount;
-	private Socket soc;
-	private String answ;
-	Thread t;
-
 	public void run() {
 		syncount.addCounter(t);
 		try (InputStream is = soc.getInputStream();
