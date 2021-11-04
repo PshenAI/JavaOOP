@@ -13,15 +13,15 @@ public class Client implements Runnable {
 	private String answ;
 	Thread t;
 	
-	
-		public Client(Socket soc, String answ, SyncCounter syncount) {
-		super();
-		this.syncount = syncount;
-		this.soc = soc;
-		this.answ = answ;
-		t = new Thread(this);
-		t.start();
+	public Client(Socket soc, String answ, SyncCounter syncount) {
+	super();
+	this.syncount = syncount;
+	this.soc = soc;
+	this.answ = answ;
+	t = new Thread(this);
+	t.start();
 	}
+	
 	public void run() {
 		syncount.addCounter(t);
 		try (InputStream is = soc.getInputStream();
