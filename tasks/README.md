@@ -1,4 +1,4 @@
 #Test
- it test check.
+Git test check.
 ##GitCheck
 Completed
