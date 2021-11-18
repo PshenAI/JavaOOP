@@ -1,3 +1,0 @@
-# Folder test
-
-Check
