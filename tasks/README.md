@@ -1,10 +1,3 @@
-# Test
+# Homeworks & Other practice
 
-
-Git test check.
-
-
-## GitCheck
-
-
-Completed!
+Homeworks for Prog.kiev.ua Java developer course and many other practice programs.
