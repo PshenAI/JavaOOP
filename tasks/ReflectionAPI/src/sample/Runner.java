@@ -13,7 +13,7 @@ public class Runner {
 		dojima.setFamilyName("Dojima");
 
 		String[] members = { "Kiryu", "Nishikiyama", "Kuze", "Awano", "Sohei", "Kazama" };
-		String[] ranks = { "Private", "Private", "Oyabun", "Oyabun", "Patriarch" };
+		String[] ranks = { "Kyodai", "Kyodai", "Wakagashira", "Wakagashira", "Patriarch" };
 
 		Map<String, String> familyMembers = new HashMap<>();
 		for (int i = 0; i < members.length; i++) {
