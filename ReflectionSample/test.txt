@@ -1,0 +1,2 @@
+theName=Japan
+population=125360000
