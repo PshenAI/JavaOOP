@@ -1,13 +1,13 @@
 package com.gmail.sicyaas;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 @Retention(RetentionPolicy.RUNTIME)
@@ -18,7 +18,6 @@ import java.util.*;
 class Country {
     @Save
     String theName;
-    String[] biggestCities;
     @Save
     Integer population;
     Boolean isEmperorPresent;
@@ -26,9 +25,8 @@ class Country {
     public Country() {
     }
 
-    public Country(String theName, String[] biggestCities, Integer population, Boolean isEmperorPresent) {
+    public Country(String theName, Integer population, Boolean isEmperorPresent) {
         this.theName = theName;
-        this.biggestCities = biggestCities;
         this.population = population;
         this.isEmperorPresent = isEmperorPresent;
     }
@@ -37,7 +35,6 @@ class Country {
     public String toString() {
         return "Country{" +
                 "theName='" + theName + '\'' +
-                ", biggestCities=" + Arrays.toString(biggestCities) +
                 ", population=" + population +
                 ", isEmperorPresent=" + isEmperorPresent +
                 '}';
@@ -46,13 +43,12 @@ class Country {
 
 
 public class Main {
-    public static void main(String[] args) throws IllegalAccessException, FileNotFoundException {
+    public static void main(String[] args) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException {
 
-        Country japan = new Country("Japan", new String[]{"Tokyo", "Osaka", "Nagoya"}, 125_360_000, true);
+        Country japan = new Country("Japan", 125_360_000, true);
         File fl = new File("C:\\Users\\Velvet X\\Documents\\Java Studies\\Java Pro\\ReflectionSample\\test.txt");
         serializer(japan, fl.getAbsolutePath());
         Country test = deSerializer(fl);
-
 
         System.out.println(test);
 
@@ -60,25 +56,21 @@ public class Main {
     }
 
 
-    public static Country deSerializer(File file) throws FileNotFoundException, IllegalAccessException {
-        Country test = new Country();
-        String[] readFields = fileReader(file).split(System.lineSeparator());
+    public static Country deSerializer(File file) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException, InstantiationException {
+        Map<String, String> test = fileReader(file);
+        Country country = new Country();
+
         Class<?> cls = Country.class;
-        for (String temp : readFields) {
-            String[] strArr = temp.split("=");
-            Field field;
-            try {
-                field = cls.getDeclaredField(strArr[0]);
-            } catch (NoSuchFieldException e) {
-                continue;
-            }
-            if (field.getType() == String.class) {
-                field.set(test, strArr[1]);
-            } else if (field.getType() == Integer.class) {
-                field.set(test, Integer.parseInt(strArr[1]));
+        Field[] fields = cls.getDeclaredFields();
+
+        for (Field field : fields) {
+            String temp = test.get(field.getName());
+            Constructor<?> ctr = field.getType().getConstructor(String.class);
+            if(temp != null){
+                field.set(country, ctr.newInstance(temp));
             }
         }
-        return test;
+        return country;
     }
 
     public static void serializer(Country country, String path) throws IllegalAccessException {
@@ -95,13 +87,23 @@ public class Main {
         fileWriter(classFields, path);
     }
 
-    public static String fileReader(File file) throws FileNotFoundException {
-        Scanner sc = new Scanner(file);
-        String result = "";
-        for (; sc.hasNextLine(); ) {
-            result = result + sc.nextLine() + System.lineSeparator();
+    public static Map<String, String> fileReader(File file) {
+        String text = "";
+        try(BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String temp = "";
+            while ((temp = br.readLine()) != null) {
+                text = text + temp + System.lineSeparator();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return result;
+        String[] split = text.split(System.lineSeparator());
+        Map<String, String> fields = new HashMap<>();
+        for (String field : split){
+            String[] temp = field.split("=");
+            fields.put(temp[0], temp[1]);
+        }
+        return fields;
     }
 
     public static void fileWriter(Map<String, String> fields, String path) {
