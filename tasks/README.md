@@ -1,3 +1,3 @@
-# Homeworks & Other practice
+# Java OOP HW
 
-Homeworks for Prog.kiev.ua Java developer course and many other practice programs.
+All homeworks for Java OOP course.
