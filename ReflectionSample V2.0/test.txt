@@ -1,0 +1,3 @@
+capital=City{theName='Tokyo', population=14000000, status='Capital'}
+theName=Japan
+population=125360000
