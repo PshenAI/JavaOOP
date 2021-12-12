@@ -1,5 +1,6 @@
 package com.gmail.sicyaas;
 
+// AUTOMATICALLY GENERATED CLASS
 public class Country {
 
     public Boolean isMonarchPresent;
