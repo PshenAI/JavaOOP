@@ -1,5 +1,6 @@
 package ua.kiev.prog;
 
+import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
@@ -13,18 +14,23 @@ import java.util.Arrays;
 public class CheckServlet extends HttpServlet {
 
     private AuthData authData = AuthData.getInstance();
+    private OnlineUsers ou = OnlineUsers.getInstance();
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-
         byte[] buf = requestBodyToArray(req);
         String bufStr = new String(buf, StandardCharsets.UTF_8);
         String[] userData = bufStr.split(" ");
         if(userData[2].equals("yes") && !userData[0].equals("") && !userData[1].equals("")){
             authData.add(userData);
-        } else if(userData[2].equals("no") && !authData.get(userData[0]).equals(userData[1])){
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            ou.add(userData[0]);
+            System.out.println(ou.getList());
+            System.out.println(userData[0] + " is online.");
+        } else if(userData[2].equals("no") && authData.get(userData[0]).equals(userData[1])){
+            ou.add(userData[0]);
+            System.out.println(ou.getList());
+            System.out.println(userData[0] + " is online.");
         } else {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 

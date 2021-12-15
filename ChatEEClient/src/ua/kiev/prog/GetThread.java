@@ -6,13 +6,17 @@ import com.google.gson.GsonBuilder;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class GetThread implements Runnable {
     private final Gson gson;
     private int n;
+
+    private CurrentUser cUser = CurrentUser.getInstance();
 
     public GetThread() {
         gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
@@ -21,8 +25,14 @@ public class GetThread implements Runnable {
     @Override
     public void run() {
         try {
+            List<String> onlineUsers = getOnlineUsers();
+            System.out.println(onlineUsers);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
             while ( ! Thread.interrupted()) {
-                URL url = new URL(Utils.getURL() + "/get?from=" + n);
+                URL url = new URL(Utils.getURL() + "/get?from=" + n + "&to=" + cUser.getLogin());
                 HttpURLConnection http = (HttpURLConnection) url.openConnection();
 
                 InputStream is = http.getInputStream();
@@ -45,6 +55,21 @@ public class GetThread implements Runnable {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+
+    }
+
+    private List<String> getOnlineUsers() throws IOException {
+        URL url = new URL(Utils.getURL() + "/online");
+        HttpURLConnection http = (HttpURLConnection) url.openConnection();
+        InputStream is = http.getInputStream();
+        try {
+            byte[] buf = responseBodyToArray(is);
+            String strBuf = new String(buf, StandardCharsets.UTF_8);
+            List<String> users = gson.fromJson(strBuf, List.class);
+            return users;
+        } finally {
+            is.close();
         }
     }
 

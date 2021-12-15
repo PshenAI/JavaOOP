@@ -8,7 +8,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class Main {
+
 	public static void main(String[] args) {
+		CurrentUser cUser = CurrentUser.getInstance();
 		Scanner scanner = new Scanner(System.in);
 		try {
 			System.out.println("Are you a new user?  \"yes\" || \"no\"");
@@ -21,6 +23,8 @@ public class Main {
 			String password = scanner.nextLine();
 
 			int auth = checkAuth(Utils.getURL() + "/check", login, password, newUser);
+
+			cUser.setUser(login);
 
 			if (auth != 200) {
 				System.out.println("HTTP error occured: " + auth);
@@ -37,7 +41,10 @@ public class Main {
 				String text = scanner.nextLine();
 				if (text.isEmpty()) break;
 
-				Message m = new Message(login, text);
+				System.out.println("Who's the recipient?");
+				String to = scanner.nextLine();
+
+				Message m = new Message(login, to, text);
 				int res = m.send(Utils.getURL() + "/add");
 
 				if (res != 200) { // 200 OK
@@ -45,10 +52,27 @@ public class Main {
 					return;
 				}
 			}
+			try {
+				exitServer(cUser.getLogin());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		} finally {
 			scanner.close();
+		}
+	}
+
+	public static int exitServer(String login) throws IOException{
+		URL url = new URL(Utils.getURL() + "/online");
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("POST");
+		conn.setDoOutput(true);
+
+		try (OutputStream os = conn.getOutputStream()) {
+			os.write(login.getBytes(StandardCharsets.UTF_8));
+			return conn.getResponseCode();
 		}
 	}
 

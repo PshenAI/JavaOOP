@@ -16,7 +16,5 @@ public class AuthData {
         map.put(kv[0], kv[1]);
     }
 
-    public synchronized String get(String key) {
-        return map.get(key);
-    }
+    public synchronized String get(String key) { return map.get(key); }
 }

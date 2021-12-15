@@ -23,8 +23,17 @@ public class MessageList {
 		list.add(m);
 	}
 	
-	public synchronized String toJSON(int n) {
-		if (n >= list.size()) return null;
-		return gson.toJson(new JsonMessages(list, n));
+	public synchronized String toJSON(int n, String rec) {
+		List<Message> temp = new LinkedList<>();
+		for (Message m : list) {
+			if(m.getTo().equals("")){
+				m.setTo("everyone");
+				temp.add(m);
+			} else if( m.getTo().equals(rec) || m.getTo().equals("everyone")){
+				temp.add(m);
+			}
+		}
+		if((n >= temp.size())) { return null; }
+		return gson.toJson(new JsonMessages(temp, n));
 	}
 }
