@@ -25,19 +25,12 @@ public class GetThread implements Runnable {
     @Override
     public void run() {
         try {
-            List<String> onlineUsers = getOnlineUsers();
-            System.out.println(onlineUsers);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
             while ( ! Thread.interrupted()) {
-                URL url = new URL(Utils.getURL() + "/get?from=" + n + "&to=" + cUser.getLogin());
+                URL url = new URL(Utils.getURL() + "/get?from=" + n + "&to=" + cUser.getLogin() + "&room=" + cUser.getChatRoom());
                 HttpURLConnection http = (HttpURLConnection) url.openConnection();
 
-                InputStream is = http.getInputStream();
-                try {
-                    byte[] buf = responseBodyToArray(is);
+                try(InputStream is = http.getInputStream()) {
+                    byte[] buf = ReaderClass.responseBodyToArray(is);
                     String strBuf = new String(buf, StandardCharsets.UTF_8);
 
                     JsonMessages list = gson.fromJson(strBuf, JsonMessages.class);
@@ -47,8 +40,6 @@ public class GetThread implements Runnable {
                             n++;
                         }
                     }
-                } finally {
-                    is.close();
                 }
 
                 Thread.sleep(500);
@@ -59,30 +50,4 @@ public class GetThread implements Runnable {
 
     }
 
-    private List<String> getOnlineUsers() throws IOException {
-        URL url = new URL(Utils.getURL() + "/online");
-        HttpURLConnection http = (HttpURLConnection) url.openConnection();
-        InputStream is = http.getInputStream();
-        try {
-            byte[] buf = responseBodyToArray(is);
-            String strBuf = new String(buf, StandardCharsets.UTF_8);
-            List<String> users = gson.fromJson(strBuf, List.class);
-            return users;
-        } finally {
-            is.close();
-        }
-    }
-
-    private byte[] responseBodyToArray(InputStream is) throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        byte[] buf = new byte[10240];
-        int r;
-
-        do {
-            r = is.read(buf);
-            if (r > 0) bos.write(buf, 0, r);
-        } while (r != -1);
-
-        return bos.toByteArray();
-    }
 }

@@ -1,18 +1,25 @@
 package ua.kiev.prog;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.internal.bind.util.ISO8601Utils;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
 	public static void main(String[] args) {
 		CurrentUser cUser = CurrentUser.getInstance();
-		Scanner scanner = new Scanner(System.in);
-		try {
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+
+		try(Scanner scanner = new Scanner(System.in)) {
 			System.out.println("Are you a new user?  \"yes\" || \"no\"");
 			String newUser = scanner.nextLine();
 
@@ -30,26 +37,62 @@ public class Main {
 				System.out.println("HTTP error occured: " + auth);
 				return;
 			}
+			System.out.println("Which chatroom do you want to use? (Leave blank if you want to use Main)");
+			String chatRoom = scanner.nextLine();
+			if(!chatRoom.equals("") && !checkRoom(chatRoom, login) ){
+				System.out.println("No such room or you don't have access to one. \nRedirecting to Main...");
+				cUser.setChatRoom("Main");
+			} else if(chatRoom.equals("")){
+				cUser.setChatRoom("Main");
+			} else {
+				cUser.setChatRoom(chatRoom);
+			}
+
 			System.out.println("Successfully entered chat!");
 
 			Thread th = new Thread(new GetThread());
 			th.setDaemon(true);
 			th.start();
 
-            System.out.println("Enter your message: ");
+            System.out.println("Enter the message or command: ");
 			while (true) {
 				String text = scanner.nextLine();
 				if (text.isEmpty()) break;
 
-				System.out.println("Who's the recipient?");
-				String to = scanner.nextLine();
+				if(text.startsWith("-")){
+					String roomName = "";
+					if(text.equals("-getUsers")){
+						System.out.println(getOnlineUsers(gson));
+					} else if(text.equals("-newRoom")){
+						System.out.println("Give a name to your room: ");
+						roomName = scanner.nextLine();
+						chatRoomControl(text, login, roomName);
+					} else if(text.equals("-deleteRoom")){
+						System.out.println("Which room you want to delete? ");
+						roomName = scanner.nextLine();
+						chatRoomControl(text, login, roomName);
+					} else if(text.equals("-enterRoom")){
+						System.out.println("Which room you want to enter? ");
+						roomName = scanner.nextLine();
+						chatRoomControl(text, login, roomName);
+					} else if(text.equals("-leaveRoom")){
+						System.out.println("Which room you want to leave? ");
+						roomName = scanner.nextLine();
+						chatRoomControl(text, login, roomName);
+					} else {
+						System.out.println("Unknown command!");
+					}
+				} else {
+					System.out.println("Who's the recipient?");
+					String to = scanner.nextLine();
 
-				Message m = new Message(login, to, text);
-				int res = m.send(Utils.getURL() + "/add");
+					Message m = new Message(login, to, text, chatRoom);
+					int res = m.send(Utils.getURL() + "/add");
 
-				if (res != 200) { // 200 OK
-					System.out.println("HTTP error occured: " + res);
-					return;
+					if (res != 200) { // 200 OK
+						System.out.println("HTTP error occured: " + res);
+						return;
+					}
 				}
 			}
 			try {
@@ -59,12 +102,49 @@ public class Main {
 			}
 		} catch (IOException ex) {
 			ex.printStackTrace();
-		} finally {
-			scanner.close();
 		}
 	}
 
-	public static int exitServer(String login) throws IOException{
+	private static boolean checkRoom(String name, String login) throws IOException{
+		URL url = new URL(Utils.getURL() + "/chatRoom?room=" + name + "&user=" + login);
+		HttpURLConnection http = (HttpURLConnection) url.openConnection();
+		try(InputStream is = http.getInputStream()) {
+			byte[] buf = ReaderClass.responseBodyToArray(is);
+			String strBuf = new String(buf, StandardCharsets.UTF_8);
+			if(strBuf.equals("true")){
+				return true;
+			}
+			return false;
+		}
+	}
+
+	private static int chatRoomControl(String command, String login, String roomName) throws IOException{
+		URL obj = new URL(Utils.getURL() + "/chatRoom");
+		HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
+
+		conn.setRequestMethod("POST");
+		conn.setDoOutput(true);
+
+		try (OutputStream os = conn.getOutputStream()) {
+			String userData = command + " " + login + " " + roomName;
+			os.write(userData.getBytes(StandardCharsets.UTF_8));
+			return conn.getResponseCode();
+		}
+
+	}
+
+	private static List<String> getOnlineUsers(Gson gson) throws IOException {
+		URL url = new URL(Utils.getURL() + "/online");
+		HttpURLConnection http = (HttpURLConnection) url.openConnection();
+		try(InputStream is = http.getInputStream()) {
+			byte[] buf = ReaderClass.responseBodyToArray(is);
+			String strBuf = new String(buf, StandardCharsets.UTF_8);
+			List<String> users = gson.fromJson(strBuf, List.class);
+			return users;
+		}
+	}
+
+	private static int exitServer(String login) throws IOException{
 		URL url = new URL(Utils.getURL() + "/online");
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("POST");
@@ -76,7 +156,7 @@ public class Main {
 		}
 	}
 
-	public static int checkAuth(String url, String login, String password, String newUser) throws IOException{
+	private static int checkAuth(String url, String login, String password, String newUser) throws IOException{
 		URL obj = new URL(url);
 		HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
 
