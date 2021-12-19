@@ -60,9 +60,11 @@ public class Main {
 				if (text.isEmpty()) break;
 
 				if(text.startsWith("-")){
-					String request = "";
+					String request;
 					if(text.equals("-getUsers")){
-						System.out.println(getOnlineUsers(gson));
+						System.out.println(getUsers(gson,""));
+					} else if (text.equals("-getAll")){
+						System.out.println(getUsers(gson, "?all=true"));
 					} else if(text.equals("-getStatus")){
 						System.out.println("Whose status you want to check out?");
 						request = scanner.nextLine();
@@ -153,14 +155,14 @@ public class Main {
 		}
 	}
 
-	private static List<String> getOnlineUsers(Gson gson) throws IOException {
-		URL url = new URL(Utils.getURL() + "/online");
+	private static List<String> getUsers(Gson gson, String param) throws IOException {
+		URL url = new URL(Utils.getURL() + "/online" + param);
 		HttpURLConnection http = (HttpURLConnection) url.openConnection();
 		try(InputStream is = http.getInputStream()) {
 			byte[] buf = ReaderClass.responseBodyToArray(is);
 			String strBuf = new String(buf, StandardCharsets.UTF_8);
-			List<String> users = gson.fromJson(strBuf, List.class);
-			return users;
+			List<String> result = gson.fromJson(strBuf, List.class);
+			return result;
 		}
 	}
 

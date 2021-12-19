@@ -18,15 +18,24 @@ import java.nio.charset.StandardCharsets;
 public class UserListServlet extends HttpServlet {
 
     private OnlineUsers ou = OnlineUsers.getInstance();
+    private AllUsers au = AllUsers.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String result = ou.toJSON();
-        String all = req.getParameter("status");
-        if(all != null && ou.userStatus(all)){
+        String all = req.getParameter("all");
+        String status = req.getParameter("status");
+        String result;
+        if(all != null){
+            result = au.toJSON();
+        } else {
+            result = ou.toJSON();
+        }
+
+
+        if(status != null && ou.userStatus(status)){
             result = "true";
         }
-        if(all != null && !ou.userStatus(all)){
+        if(status != null && !ou.userStatus(status)){
             result = "false";
         }
         OutputStream os = resp.getOutputStream();
