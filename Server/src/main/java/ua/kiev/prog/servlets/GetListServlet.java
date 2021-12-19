@@ -3,7 +3,7 @@ package ua.kiev.prog.servlets;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import jakarta.servlet.http.*;
-import ua.kiev.prog.MessageList;
+import ua.kiev.prog.dataBases.MessageList;
 
 public class GetListServlet extends HttpServlet {
 	

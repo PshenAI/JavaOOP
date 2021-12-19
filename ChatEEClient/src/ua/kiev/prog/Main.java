@@ -60,25 +60,29 @@ public class Main {
 				if (text.isEmpty()) break;
 
 				if(text.startsWith("-")){
-					String roomName = "";
+					String request = "";
 					if(text.equals("-getUsers")){
 						System.out.println(getOnlineUsers(gson));
+					} else if(text.equals("-getStatus")){
+						System.out.println("Whose status you want to check out?");
+						request = scanner.nextLine();
+						System.out.println(getUserStatus(request));
 					} else if(text.equals("-newRoom")){
 						System.out.println("Give a name to your room: ");
-						roomName = scanner.nextLine();
-						chatRoomControl(text, login, roomName);
+						request = scanner.nextLine();
+						chatRoomControl(text, login, request);
 					} else if(text.equals("-deleteRoom")){
-						System.out.println("Which room you want to delete? ");
-						roomName = scanner.nextLine();
-						chatRoomControl(text, login, roomName);
+						System.out.println("Which room you want to delete?");
+						request = scanner.nextLine();
+						chatRoomControl(text, login, request);
 					} else if(text.equals("-enterRoom")){
-						System.out.println("Which room you want to enter? ");
-						roomName = scanner.nextLine();
-						chatRoomControl(text, login, roomName);
+						System.out.println("Which room you want to enter?");
+						request = scanner.nextLine();
+						chatRoomControl(text, login, request);
 					} else if(text.equals("-leaveRoom")){
-						System.out.println("Which room you want to leave? ");
-						roomName = scanner.nextLine();
-						chatRoomControl(text, login, roomName);
+						System.out.println("Which room you want to leave?");
+						request = scanner.nextLine();
+						chatRoomControl(text, login, request);
 					} else {
 						System.out.println("Unknown command!");
 					}
@@ -131,6 +135,22 @@ public class Main {
 			return conn.getResponseCode();
 		}
 
+	}
+
+	private static String getUserStatus(String login) throws IOException{
+		String result;
+		URL url = new URL(Utils.getURL() + "/online?status=" + login);
+		HttpURLConnection http = (HttpURLConnection) url.openConnection();
+		try(InputStream is = http.getInputStream()) {
+			byte[] buf = ReaderClass.responseBodyToArray(is);
+			String strBuf = new String(buf, StandardCharsets.UTF_8);
+			if(strBuf.equals("true")){
+				result = login + " is online.";
+			} else{
+				result = login + " is offline.";
+			}
+			return result;
+		}
 	}
 
 	private static List<String> getOnlineUsers(Gson gson) throws IOException {

@@ -2,12 +2,10 @@ package ua.kiev.prog.servlets;
 
 import jakarta.servlet.http.*;
 import ua.kiev.prog.Message;
-import ua.kiev.prog.MessageList;
+import ua.kiev.prog.dataBases.MessageList;
 import ua.kiev.prog.ReaderClass;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 public class AddServlet extends HttpServlet {
