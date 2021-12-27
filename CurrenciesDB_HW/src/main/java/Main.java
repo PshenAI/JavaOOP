@@ -9,10 +9,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -29,8 +26,14 @@ public class Main {
             String currentDate = sdf.format(date);
             int day = Integer.valueOf(currentDate.substring(0,2));
             List<Currency> usdInfo = new ArrayList<>();
-            for (int i = day; i >= day - 1  ; i--) {
-                usdInfo.add(usdInfoGetter(currentDate.replace(currentDate.substring(0,2), String.valueOf(i))));
+            for (int i = day; i >= day - 20 ; i--) {
+                String ins;
+                if(i < 10){
+                    ins = "0" + i;
+                } else {
+                    ins = String.valueOf(i);
+                }
+                usdInfo.add(usdInfoGetter(currentDate.replace(currentDate.substring(0,2), ins)));
             }
             usdInfo.forEach(a -> cdi.add(a));
             System.out.println(usdInfo);
@@ -72,10 +75,15 @@ public class Main {
                 json = buff + System.lineSeparator();
             }
         }
-        json = json.substring(2533, 2672);
+        String[] temp = json.split("baseCurrency\"");
+        for (int i = 0; i < temp.length; i++) {
+            if(temp[i].contains("USD")){
+                json = "{\"baseCurrency\"" + temp[i].substring(0, temp[i].length() - 3);
+            }
+        }
         Currency res = gson.fromJson(json, Currency.class);
         res.setDate(date);
-  
+
         return res;
     }
 }

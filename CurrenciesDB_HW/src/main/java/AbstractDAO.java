@@ -68,21 +68,15 @@ public abstract class AbstractDAO<T> {
             StringBuilder names = new StringBuilder();
             StringBuilder values = new StringBuilder();
 
-            // insert into t (id,name,age) values("..",..
-
             for (Field f : fields) {
                 if (f != id) {
                     f.setAccessible(true);
 
                     if(f.getName().equals("date")){
                         String temp = (String)f.get(t);
-                        Date date = new Date();
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                        String res = sdf.format(date);
+                        String reso = temp.substring(6,10) + "-" + temp.substring(3,5) + "-" + temp.substring(0,2);
                         names.append(f.getName()).append(',');
-                        values.append('"').append(res.replace(res.substring(9,10), temp.substring(1,2)).replace
-                                (res.substring(6,7), temp.substring(4,5)).replace
-                                (res.substring(1,4), temp.substring(7,10))).append("\",");
+                        values.append('"').append(reso).append("\",");
                         continue;
                     }
 
@@ -207,7 +201,7 @@ public abstract class AbstractDAO<T> {
                     ResultSetMetaData md = rs.getMetaData();
 
                     while (rs.next()) {
-                        T t = cls.newInstance(); //!!!
+                        T t = cls.getDeclaredConstructor().newInstance(); //!!!
 
                         for (int i = 1; i <= md.getColumnCount(); i++) {
                             String columnName = md.getColumnName(i);
