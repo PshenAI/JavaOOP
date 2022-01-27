@@ -104,12 +104,16 @@ public class Contact {
         } catch (NullPointerException ex){
         }
         return "{\n" +
+                "\nContacts:[" +
+                "{\n" +
                 "\"id\": " + id +
                 ",\n\"group\": " + groupName +
                 ",\n\"name\": " + name +
                 ",\n\"surname\": " + surname +
                 ",\n\"phone\": " + phone +
                 ",\n\"email\": " + email +
+                "\n}" +
+                "\n]" +
                 "\n}";
     }
 }
