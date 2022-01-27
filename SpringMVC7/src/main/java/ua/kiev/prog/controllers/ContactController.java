@@ -111,10 +111,12 @@ public class ContactController {
         String returnFile= null;
         List<Contact> contacts = null;
         contacts = contactService.listContacts(group);
-        returnFile = contactsToJSON(contacts);
+       
         if(format.equals("json")){
+            returnFile = contactsToJSON(contacts);
             httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         } else if(format.equals("xml")){
+            returnFile = contactsToXML(contacts);
             httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML_VALUE);
         }
         httpHeaders.setContentDispositionFormData("attachment", "AllContacts." + format);
