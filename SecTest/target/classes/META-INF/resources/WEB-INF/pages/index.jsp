@@ -8,7 +8,7 @@
 </head>
 <body>
     <div align="center">
-        <h1>Your login is: ${login}, your roles are:</h1>
+        <h1>Your login is: ${login}, your roles are: </h1>
         <c:forEach var="s" items="${roles}">
             <h3><c:out value="${s}" /></h3>
         </c:forEach>
@@ -26,9 +26,6 @@
                         <input type="submit" class="input-group-text" value="Update photo"/>
                     </div>
                 </form>
-                <c:if test="${param.fail ne null}">
-                    <p class="text-danger">Upload failed! Send only png or jpg.</p>
-                </c:if>
                 <c:url value="/update" var="updateUrl" />
                 <form action="${updateUrl}" method="POST">
                     <br/><input class="form-control" type="text" name="email" value="${email}" placeholder="E-mail"/><br/>
@@ -36,6 +33,9 @@
                     <br/><input class="form-control" type="text" name="phone" value="${address}" placeholder="Address" /><br/>
                     <input class="input-group-text mt-2 bg-primary text-white" type="submit" value="Update" class="input-group-text"/>
                 </form>
+                <c:if test="${param.fail ne null}">
+                    <p class="text-danger">Update failed! ${fail}</p>
+                </c:if>
             </div>
         </div>
 

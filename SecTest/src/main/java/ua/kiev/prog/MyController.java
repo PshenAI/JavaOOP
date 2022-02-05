@@ -9,12 +9,10 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class MyController {
     }
 
     @GetMapping("/")
-    public String index(Model model){
+    public String index(Model model, @RequestParam(value = "fail", required = false) String fail){
         User user = getCurrentUser();
 
         String login = user.getUsername();
@@ -42,6 +40,9 @@ public class MyController {
         model.addAttribute("phone", dbUser.getPhone());
         model.addAttribute("address", dbUser.getAddress());
         model.addAttribute("photo", dbUser.getId());
+        if(fail != null && !fail.equals("")){
+            model.addAttribute("fail", fail);
+        }
 
         return "index";
     }
@@ -65,12 +66,13 @@ public class MyController {
         File uploadedFile = oldPhotoRetriever(id);
         String fileExtension = file.getOriginalFilename()
                 .substring(file.getOriginalFilename().length() - 3);
+
         if(fileExtension.equals("jpg") || fileExtension.equals("png")){
             byte[] res = file.getBytes();
             writeByte(res, uploadedFile);
             return "redirect:/";
         } else {
-            return "redirect:/?fail";
+            return "redirect:/?fail=File must be either '.jpg' or '.png'";
         }
 //        String img = "C:\\Users\\Velvet X\\Documents\\Java Studies\\Java Pro\\SecTest\\img\\"
 //                + fileName;
@@ -79,6 +81,15 @@ public class MyController {
     @PostMapping(value = "/update")
     public String update(@RequestParam(required = false) String email,
                          @RequestParam(required = false) String phone) {
+        phone = phone.substring(0, phone.length()-1);
+        if( !email.equals("") && !email.matches(".*[a-z@.].*")){
+            System.out.println("EMAIL WORKING");
+            return "redirect:/?fail=Check your email!";
+        } else if (!phone.equals(",") && !phone.matches(".*[\\d]")){
+            System.out.println("PHONE WORKING" + phone);
+            return "redirect:/?fail=Check your phone number!";
+        }
+
         User user = getCurrentUser();
 
         String login = user.getUsername();
@@ -93,7 +104,6 @@ public class MyController {
                          @RequestParam(required = false) String email,
                          @RequestParam(required = false) String phone,
                          @RequestParam(required = false) String address,
-                         @RequestParam(required = false) String photo,
                          Model model) {
         String passHash = passwordEncoder.encode(password);
 
